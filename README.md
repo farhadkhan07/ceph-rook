@@ -332,6 +332,46 @@ pod.yaml  pvc-clone.yaml  pvc-restore.yaml  pvc.yaml  snapshotclass.yaml  snapsh
 NAME              PROVISIONER                  RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
 rook-ceph-block   rook-ceph.rbd.csi.ceph.com   Delete          Immediate           true                   18h
 ```
+## Ceph Dashboard
+```
+# kubectl create -f dashboard-external-https.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rook-ceph-mgr-dashboard-external-https
+  namespace: rook-ceph
+  labels:
+    app: rook-ceph-mgr
+    rook_cluster: rook-ceph
+spec:
+  ports:
+  - name: dashboard
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    app: rook-ceph-mgr
+    rook_cluster: rook-ceph
+  sessionAffinity: None
+  type: NodePort
+```
+```
+# kubectl get svc -n rook-ceph
+NAME                                     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+csi-cephfsplugin-metrics                 ClusterIP   10.109.125.45    <none>        8080/TCP,8081/TCP   3d19h
+csi-rbdplugin-metrics                    ClusterIP   10.97.53.77      <none>        8080/TCP,8081/TCP   3d19h
+rook-ceph-mgr                            ClusterIP   10.103.135.104   <none>        9283/TCP            3d19h
+rook-ceph-mgr-dashboard                  ClusterIP   10.104.6.176     <none>        8443/TCP            3d19h
+rook-ceph-mgr-dashboard-external-https   NodePort    10.102.249.203   <none>        8443:31000/TCP      15m
+```
+## Login Credentials
+After you connect to the dashboard you will need to login for secure access. Rook creates a default user named admin and generates a secret called rook-ceph-dashboard-admin-password in the namespace where the Rook Ceph cluster is running. To retrieve the generated password, you can run the following:
+
+```
+kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
+```
+
 ## Reference link:
 ```
 https://rook.io/docs/rook/v1.5/ceph-quickstart.html
@@ -339,4 +379,4 @@ https://www.adaltas.com/en/2020/04/16/expose-ceph-from-rook-kubernetes/
 https://github.com/rook/rook.github.io/blob/master/docs/rook/v1.5/ceph-dashboard.md
 https://documentation.suse.com/sbp/all/html/SBP-rook-ceph-kubernetes/index.html#sec-planning-nodes-ceph-daemons
 https://www.youtube.com/watch?v=wIRMxl_oEMM
-```
+``` 
