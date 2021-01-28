@@ -336,6 +336,7 @@ rook-ceph-block   rook-ceph.rbd.csi.ceph.com   Delete          Immediate        
 ```
 https://rook.io/docs/rook/v1.5/ceph-quickstart.html
 https://www.adaltas.com/en/2020/04/16/expose-ceph-from-rook-kubernetes/
+https://github.com/rook/rook.github.io/blob/master/docs/rook/v1.5/ceph-dashboard.md
 https://documentation.suse.com/sbp/all/html/SBP-rook-ceph-kubernetes/index.html#sec-planning-nodes-ceph-daemons
 https://www.youtube.com/watch?v=wIRMxl_oEMM
 ```
